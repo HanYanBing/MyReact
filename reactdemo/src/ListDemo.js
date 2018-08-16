@@ -6,19 +6,40 @@ class ListDemo extends Component { //或者继承 React.Component,那么import�
   constructor(props){
     super(props);
     this.state = {
-      list:[
-        'react',
-        'Englist'
-      ]
+      list:[],
+      inptutValue:''
     }
 
   }
 
   // 定义方法
-  btnClick(){
+
+  // 不能自动双向绑定，需要改变时进行手动赋值操作  
+  inputChange(e){
     this.setState({
-      list:[...this.state.list,'Helloworld']
+      inptutValue:e.target.value
     })
+  }
+
+  // 点击添加内容
+  btnClick(){
+    if(this.state.inptutValue){
+      this.setState({
+        list:[...this.state.list,this.state.inptutValue],
+        inptutValue:''
+      })
+    }
+  }
+
+  itemClick(index){
+    const list = [...this.state.list];
+    list.splice(index,1);
+
+    // this.setState({
+    //   list:list
+    // });
+    // 简写
+    this.setState({list});
   }
 
   // 必须有render函数， 负责组件显示内容 
@@ -34,15 +55,17 @@ class ListDemo extends Component { //或者继承 React.Component,那么import�
       
 
       // 只能包含在一个大的标签之内，不能多个并列
+      // 循环li key值不能相同--》所以赋值索引（相同会报警告）
       <div>
         <div>
-          <input type="text" />
+          <input type="text" value={this.state.inptutValue} onChange = {this.inputChange.bind(this)} />
           <button onClick = {this.btnClick.bind(this)}>add</button>
         </div>
+
         <ul>
           {
             this.state.list.map((item,index)=>{
-              return <li>{item}</li>
+              return <li key={index} onClick ={this.itemClick.bind(this,index)}>{item}</li>  
             })
           }
         </ul>

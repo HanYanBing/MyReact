@@ -4,7 +4,7 @@
 
 全局安装create-react-app:
 ```bash
-npm install --save-dev webpack
+npm install --save-dev create-react-app
 ```
 
 在当前目录下创建一个my-app的文件夹:
