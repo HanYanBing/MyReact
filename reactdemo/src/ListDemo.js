@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import TodoItem from './TodoItem';
+
 
 // 定义react组件（是一个类）
 class ListDemo extends Component { //或者继承 React.Component,那么import就不用{Component}
@@ -9,6 +11,10 @@ class ListDemo extends Component { //或者继承 React.Component,那么import�
       list:[],
       inptutValue:''
     }
+
+    this.inputChange = this.inputChange.bind(this);
+    this.btnClick = this.btnClick.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
 
   }
 
@@ -31,17 +37,30 @@ class ListDemo extends Component { //或者继承 React.Component,那么import�
     }
   }
 
-  itemClick(index){
-    const list = [...this.state.list];
+  deleteItem(index){
+    const list = [...this.state.list];  //拷贝
     list.splice(index,1);
 
     // this.setState({
     //   list:list
     // });
+    
     // 简写
     this.setState({list});
   }
 
+  getItems(){
+
+    return(
+      this.state.list.map((item,index)=>{
+        return <TodoItem 
+          itemClick = {this.deleteItem} 
+          key={index} 
+          content={item} 
+          index ={index}/>
+      })
+    ) 
+  }
   // 必须有render函数， 负责组件显示内容 
   render() {
     return (
@@ -56,18 +75,16 @@ class ListDemo extends Component { //或者继承 React.Component,那么import�
 
       // 只能包含在一个大的标签之内，不能多个并列
       // 循环li key值不能相同--》所以赋值索引（相同会报警告）
+      // 父组件通过属性的方式向子组件传递参数
+      // 子组件通过props的方式接收父组件传递过来的参数
       <div>
         <div>
-          <input type="text" value={this.state.inptutValue} onChange = {this.inputChange.bind(this)} />
-          <button onClick = {this.btnClick.bind(this)}>add</button>
+          <input type="text" value={this.state.inptutValue} onChange = {this.inputChange} />
+          <button className='btnClass' style={{'background':'red'}} onClick = {this.btnClick}>add</button>
         </div>
 
         <ul>
-          {
-            this.state.list.map((item,index)=>{
-              return <li key={index} onClick ={this.itemClick.bind(this,index)}>{item}</li>  
-            })
-          }
+          {this.getItems()}
         </ul>
       </div>
     );
